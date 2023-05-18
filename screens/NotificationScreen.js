@@ -70,7 +70,7 @@ const s = StyleSheet.create({
     row2: {
      
     }, btnPersonalizeRecommendations: {
-        backgroundColor: "grey",
+        backgroundColor: "#1f5b3c",
         color: "white",
         borderRadius: 10,
         paddingTop: 15,

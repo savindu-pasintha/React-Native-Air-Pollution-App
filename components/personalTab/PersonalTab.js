@@ -13,7 +13,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const PersonalTab = () => {
   const navigation = useNavigation();
-
   const [date, setDate] = useState(new Date());
   const [age, setAge] = useState(0);
   const [name, setName] = useState("");

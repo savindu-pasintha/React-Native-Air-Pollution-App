@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import {
   View,
   Text,
@@ -9,15 +9,25 @@ import {
 } from "react-native";
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { useNavigation } from '@react-navigation/native';
-
+import { Storage } from 'expo-storage'
 const HomeScreen = () => {
   const navigation = useNavigation();
-
+  const [location,setLocation] = useState("")
+ 
+  const getValueFunction = async () => {
+    const item = JSON.parse(
+      await Storage.getItem({ key: `current_location` })
+    )
+    setLocation(item?.location)
+  };
+  useEffect(()=>{
+    getValueFunction()
+  },[])
   return (
     <View style={s.container}>
       <View style={s.row1}>
         <View>
-          <Text style={s.location}>Colombo</Text>
+          <Text style={s.location}>{location?location:""}</Text>
         </View>
         <View style={s.row_1}>
           <Image source={require("../assets/logo.jpeg")} style={s.image_1} />
@@ -97,7 +107,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   btnPersonalizeRecommendations: {
-    backgroundColor: "grey",
+    backgroundColor: "#1F5B3C",
     color: "white",
     borderRadius: 10,
     paddingTop: 15,
@@ -108,13 +118,14 @@ const s = StyleSheet.create({
   box: {
     width: 100,
     height: 100,
-    backgroundColor: "#D6EFFF",
+    backgroundColor: "#318f5e",
     borderRadius: 10,
   },
   boxText: {
-    fontSize: 10,
+    fontSize: 12,
     textAlign: "center",
     paddingTop: 45,
+    color: "white"
   },
   row_1: {
     height: 150,
@@ -130,10 +141,10 @@ const s = StyleSheet.create({
     textAlign: "center",
     width: 200,
     height: 50,
-    backgroundColor: "#fed18c",
+    backgroundColor: "#92d050",
     marginTop: 40,
     paddingTop: 15,
-    borderTopColor: "black",
+    borderColor: "#1F5B3C",
     borderTopWidth: 2,
     borderRadius: 10,
   },
@@ -149,23 +160,23 @@ const s = StyleSheet.create({
   },
   location: {
     borderRadius: 10,
-    backgroundColor: "#fed18c",
+    backgroundColor: "#92d050",
     height: 50,
     color: "black",
     textAlign: "center",
-    borderColor: "black",
+    borderColor: "#1F5B3C",
     borderTopWidth: 2,
     paddingTop: 10,
-    fontSize:25,
+    fontSize:20,
     textTransform:"uppercase"
   },
   temp: {
-    backgroundColor: "#fed18c",
+    backgroundColor: "#92d050",
     height: 50,
     width: 140,
     textAlign: "center",
     paddingTop: 15,
-    borderTopColor: "black",
+    borderColor: "#1F5B3C",
     borderTopWidth: 2,
     borderRadius: 10,
   },

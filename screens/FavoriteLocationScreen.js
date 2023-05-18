@@ -12,12 +12,14 @@ import { useNavigation } from '@react-navigation/native';
 import FavoriteLocationCard from "../components/FavoriteLocationCard";
 import CheckBox from "react-native-check-box";
 import * as Location from 'expo-location';
-
+import { Storage } from 'expo-storage'
 const  FavoriteLocationScreen = () => {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [cname, setCName] = useState("");
   const [isChecked1, setIsChecked1] = useState(true);
+  const [location,setLocation] = useState("")
+ 
   const [data,setData] = useState([{
     title:"Favorite Location",
     description:"In this example, the Accordion component takes title and content as props. It uses the useState hook to manage the expanded state and the animation value. The toggleAccordion function is called when the accordion is pressed, which toggles the expanded state and animates the content height. The rotateIcon value is interpolated to rotate the icon based on the animation value."
@@ -53,25 +55,16 @@ const  FavoriteLocationScreen = () => {
     description:"In this example, the Accordion component takes title and content as props. It uses the useState hook to manage the expanded state and the animation value. The toggleAccordion function is called when the accordion is pressed, which toggles the expanded state and animates the content height. The rotateIcon value is interpolated to rotate the icon based on the animation value."
 }])
 
+const getValueFunction = async () => {
+  const item = JSON.parse(
+    await Storage.getItem({ key: `current_location` })
+  )
+  setName(item?.location)
+};
+useEffect(()=>{
+  getValueFunction()
+},[])
 
-useEffect(() => {
-  (async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      return;
-    }
-    let location = await Location.getCurrentPositionAsync({});
-    let geocode = await Location.reverseGeocodeAsync({
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    });
-
-    if (geocode.length > 0) {
-      setName(geocode[0]?.name);
-    }
-  
-  })();
-}, []);
   return (
     <View style={s.container}>
       <View style={s.row1}>
@@ -94,7 +87,7 @@ useEffect(() => {
         </View>
         <View style={{flexDirection:'row',justifyContent: 'space-around',}}>
         <TouchableOpacity >
-            <Text style={s.boxText}>Cancel</Text>
+            <Text style={s.boxText1}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity onPressIn={(e) =>  Alert.alert(
                     'Do you need daily notifications ?',
@@ -105,7 +98,7 @@ useEffect(() => {
                     ],
                     { cancelable: false }
                   )}>
-            <Text style={s.boxText}>Get Tips</Text>
+            <Text style={s.boxText2}>Get Tips</Text>
         </TouchableOpacity>
       </View>
       </View>
@@ -152,7 +145,7 @@ const s = StyleSheet.create({
     borderRadius: 10,
   },
   btnPersonalizeRecommendations: {
-    backgroundColor: "grey",
+    backgroundColor: "#1f5b3c",
     color: "white",
     borderRadius: 10,
     paddingTop: 15,
@@ -163,13 +156,33 @@ const s = StyleSheet.create({
   box: {
     width: 100,
     height: 100,
-    backgroundColor: "#D6EFFF",
+    backgroundColor: "white",
     borderRadius: 10,
+    borderWidth:1,
+    borderColor:"#318f5e"
   },
-  boxText: {
-    fontSize: 10,
-    textAlign: "center",
-    paddingTop: 45,
+  boxText1:{
+    width:100,
+    height:50,
+    borderRadius:10,
+    backgroundColor: "white",
+    textAlign:'center',
+    paddingTop:10,
+    fontSize:20,
+    alignItems:'center',
+    borderWidth:1,
+    borderColor:'#318f5e'
+  }
+  ,boxText2:{
+    width:100,
+    height:50,
+    borderRadius:10,
+    backgroundColor: "#318f5e",
+    textAlign:'center',
+    paddingTop:10,
+    fontSize:20,
+    alignItems:'center',
+    color:'white'
   },
   row_1: {
     height: 150,
@@ -259,16 +272,7 @@ const s = StyleSheet.create({
     paddingVertical:10,
     marginHorizontal:10,
    },
-   boxText:{
-    width:100,
-    height:50,
-    borderRadius:10,
-    backgroundColor: "#D6EFFF",
-    textAlign:'center',
-    paddingTop:10,
-    fontSize:20,
-    alignItems:'center'
-  }
+
 });
 
 export default FavoriteLocationScreen
